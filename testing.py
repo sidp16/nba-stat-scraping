@@ -1,9 +1,10 @@
 import pandas as pd
 from nba_api.stats.endpoints import playergamelog
 from nba_api.stats.static import players
+from nba_api.stats.library.parameters import SeasonAll
 
 class NBAPlayer:
-    def __init__(self, fullname, season, status=None):
+    def __init__(self, fullname, season):
         self.fullname = fullname
         self.season = season
 
@@ -16,10 +17,10 @@ class NBAPlayer:
         except:
             return "N/A"
 
-    def gameLog(self):
+    def seasonLog(self):
         try:
-            if self.season < 1900:
-                    return "N/A"
+            if int(self.season) < 1900:
+                    return "Year not in range!"
             
             playerDetails = self.details()
          
@@ -30,10 +31,21 @@ class NBAPlayer:
         except:
             return "N/A"
         
+    def careerlog(self):
+        try:
+            playerDetails = self.details()
+            
+            findGames = playergamelog.PlayerGameLog(player_id=playerDetails['id'], season=SeasonAll.all)
+            careerlog = findGames.get_data_frames()[0]
+            
+            return careerlog
+        except:
+            return "N/A"
         
-curry = NBAPlayer('lebron james ', '1016')
+player = NBAPlayer('James Harden', '2017')
 
-details = curry.details()
-gamelog = curry.gameLog()
+details = player.details()
+gamelog = player.seasonLog()
+careerlog = player.careerlog()
 
 
