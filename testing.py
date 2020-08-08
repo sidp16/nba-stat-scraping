@@ -9,6 +9,7 @@ from nba_api.stats.library.parameters import SeasonAll
 from nba_api.stats.endpoints.shotchartdetail import ShotChartDetail
 from nba_api.stats import endpoints
 
+
 class NBAPlayer:
     def __init__(self, fullname, season=0):
         self.fullname = fullname
@@ -17,8 +18,9 @@ class NBAPlayer:
     def details(self):
         try:
             players_dict = players.get_players()
-            player_details = [player for player in players_dict if player['full_name'].lower() == self.fullname.strip().lower()][0]
-            
+            player_details = \
+                [player for player in players_dict if player['full_name'].lower() == self.fullname.strip().lower()][0]
+
             return player_details
         except:
             return "N/A"
@@ -26,78 +28,86 @@ class NBAPlayer:
     def seasonLog(self):
         try:
             if int(self.season) < 1900:
-                    return "Year not in range!"
-            
+                return "Year not in range!"
+
             playerDetails = self.details()
-         
+
             findGames = playergamelog.PlayerGameLog(player_id=playerDetails['id'], season=self.season.strip())
             gamelog = findGames.get_data_frames()[0]
 
             return gamelog
         except:
             return "N/A"
-        
+
     def careerlog(self):
         try:
             playerDetails = self.details()
-            
+
             findGames = playergamelog.PlayerGameLog(player_id=playerDetails['id'], season=SeasonAll.all)
             careerlog = findGames.get_data_frames()[0]
-            
+
             return careerlog
         except:
             return "N/A"
 
-data = endpoints.leagueleaders.LeagueLeaders()
-leaders = data.league_leaders.get_data_frame()
 
-x, y = leaders.FGA/leaders.GP, leaders.PTS/leaders.GP
+# Creates a Linear Regression Model by taking in two variables
+class RegressionModel:
+    def __init__(self, var1, var2):
+        self.var1 = var1
+        self.var2 = var2
 
-x = np.array(x).reshape(-1,1)     
-y = np.array(y).reshape(-1,1)   
+    @staticmethod
+    def getData():
+        data = endpoints.leagueleaders.LeagueLeaders()
+        leaders = data.league_leaders.get_data_frame()
 
-model = linear_model.LinearRegression()    
-model.fit(x,y)                             
+        return leaders
 
-r2 = round(model.score(x,y), 2)            
-predicted_y = model.predict(x) 
+    def draw(self):
+        leaders = self.getData()
 
-plt.scatter(x, y, s=15, alpha=.5)                            
-plt.plot(x, predicted_y, color = 'black')                    
-plt.title('Relationship Between FGA and PPG')          
-plt.xlabel('FGA per Game')                                   
-plt.ylabel('Points Per Game') 
+        x, y = leaders[self.var1] / leaders.GP, leaders[self.var2] / leaders.GP
 
-player1 = NBAPlayer(leaders.PLAYER[0])
-player1d = player1.details()                              
+        x = np.array(x).reshape(-1, 1)
+        y = np.array(y).reshape(-1, 1)
 
-plt.annotate(player1d['last_name'],                       
-              (x[0], y[0]),                       
-              (x[0]-6,y[0]-2),                    
-              arrowprops=dict(arrowstyle='-'))
+        # Creates the graph itself
+        model = linear_model.LinearRegression()
+        model.fit(x, y)
 
-player2 = NBAPlayer(leaders.PLAYER[7])
-player2d = player2.details()
+        round(model.score(x, y), 2)
+        predicted_y = model.predict(x)
 
-plt.annotate(player2d['first_name'],
-             (x[7], y[7]),
-             (x[7]-7, y[7]+3),
-             arrowprops=dict(arrowstyle='-'))
+        # Places all the dots on the graph using the values (x, y) which are
+        # defined above
+        plt.scatter(x, y, s=15, alpha=.5)
+        plt.plot(x, predicted_y, color='black')
 
-player3 = NBAPlayer(leaders.PLAYER[1])
-player3d = player3.details()
+        return self.dotAnnotations(x, y)
 
-plt.annotate(player3d['first_name'],
-             (x[1], y[1]),
-             (x[1], y[1]-10),
-             arrowprops=dict(arrowstyle='-'))
+    def dotAnnotations(self, x, y):
+        # Get data for player annotations
+        leaders = self.getData()
+        player1 = NBAPlayer(leaders.PLAYER[0])
+        player1d = player1.details()
 
-player4 = NBAPlayer(leaders.PLAYER[13])
-player4d = player4.details()
+        # Places an annotation for the No.1 Player
+        plt.annotate(player1d['last_name'],
+                     (x[0], y[0]),
+                     (x[0], y[0]),
+                     arrowprops=dict(arrowstyle='-'))
 
-plt.annotate(player4d['first_name'],
-             (x[13], y[13]),
-             (x[13]-3, y[13]-11),
-             arrowprops=dict(arrowstyle='-'))
+        # Saves image and names it accordingly
+        plt.savefig(f"{self.var1} VS {self.var2}.png", dpi=300)
 
-plt.savefig('graph2.png', dpi=300)
+        return self.labels()
+
+    def labels(self):
+        plt.title(f"Relationship Between {self.var1} and {self.var2}")
+        plt.xlabel(f"{self.var1} per Game")
+        plt.ylabel(f"{self.var2} Per Game")
+
+
+assistSteal = RegressionModel('AST', 'FG3M')
+assistSteal.draw()
