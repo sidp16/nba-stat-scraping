@@ -1,0 +1,6 @@
+LAST_NAME = "last_name"
+BLACK = "black"
+NA = "N/A"
+YEAR_NOT_IN_RANGE_ERROR_MESSAGE = "Year not in range!"
+FULL_NAME = "full_name"
+ID = "id"
