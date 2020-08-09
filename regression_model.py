@@ -9,9 +9,10 @@ from nba_player import NBAPlayer
 
 # Creates a Linear Regression Model by taking in two variables
 class RegressionModel:
-    def __init__(self, var1, var2):
+    def __init__(self, var1, var2, annotations=1):
         self.var1 = var1
         self.var2 = var2
+        self.annotations = annotations
 
     @staticmethod
     def getData():
@@ -45,17 +46,15 @@ class RegressionModel:
     def dotAnnotations(self, x, y):
         # Get data for player annotations
         leaders = self.getData()
-        player1 = NBAPlayer(leaders.PLAYER[0])
-        player1d = player1.details()
 
         # Places an annotation for the No.1 Player
-        plt.annotate(player1d[LAST_NAME],
-                     (x[0], y[0]),
-                     (x[0], y[0]),
-                     arrowprops=dict(arrowstyle='-'))
-
-        # Saves image and names it accordingly, using the variables inputted
-        plt.savefig(f"{self.var1} VS {self.var2}.png", dpi=300)
+        for i in range(0, self.annotations):
+            player1 = NBAPlayer(leaders.PLAYER[i])
+            player1d = player1.details()
+            plt.annotate(player1d[LAST_NAME],
+                         (x[i], y[i]),
+                         (x[i], y[i]),
+                         arrowprops=dict(arrowstyle='-'))
 
         return self.labels()
 
@@ -63,3 +62,6 @@ class RegressionModel:
         plt.title(f"Relationship Between {self.var1} and {self.var2}")
         plt.xlabel(f"{self.var1} per Game")
         plt.ylabel(f"{self.var2} Per Game")
+        
+        # Saves image and names it accordingly, using the variables inputted
+        plt.savefig(f"{self.var1} VS {self.var2}.png", dpi=300)
