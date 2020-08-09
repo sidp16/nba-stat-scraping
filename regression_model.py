@@ -15,17 +15,16 @@ class RegressionModel:
         self.annotations = annotations
 
     @staticmethod
-    def getData():
-        data = endpoints.leagueleaders.LeagueLeaders()
+    def getData(self):
+        data = endpoints.leagueleaders.LeagueLeaders(stat_category_abbreviation=self.var1)
         leaders = data.league_leaders.get_data_frame()
 
         return leaders
 
     def draw(self):
-        leaders = self.getData()
-
+        leaders = self.getData(self)
         x, y = leaders[self.var1] / leaders.GP, leaders[self.var2] / leaders.GP
-
+        
         x = np.array(x).reshape(-1, 1)
         y = np.array(y).reshape(-1, 1)
 
@@ -45,7 +44,7 @@ class RegressionModel:
 
     def dotAnnotations(self, x, y):
         # Get data for player annotations
-        leaders = self.getData()
+        leaders = self.getData(self)
 
         # Places an annotation for the No.1 Player
         for i in range(0, self.annotations):

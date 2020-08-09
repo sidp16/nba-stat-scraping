@@ -51,6 +51,9 @@ class NBAPlayer:
     
     # Career shot chart for inputted player
     def careerShotChart(self):
-        playerDetails = self.details()
-        return ShotChartDetail(player_id=playerDetails[ID], team_id=0, context_measure_simple="FGA").get_data_frames()[0]
-        
+        try:
+            playerDetails = self.details()
+            return ShotChartDetail(player_id=playerDetails[ID], team_id=0, context_measure_simple="FGA").get_data_frames()[0]
+        except:
+            return NA
+    
