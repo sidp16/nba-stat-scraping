@@ -10,7 +10,7 @@ Each of these players do have flaws as well, some minimal, some more potent. **I
 
 Each has their shortcomings - LeBron's lacklustre free throw and 3 point shooting can be detrimental. KD is lights out shooting from anywhere on the floor but doesn't have the same ability as LeBron when it comes to making his teammates better through passing and getting everyone involved. 
 
-*I predict that I will reach the conclusion that overall, LeBron is the better player and asset for a team.*
+> ***I predict that I will reach the conclusion that overall, LeBron is the better player and asset for a team.***
 
 ![3PTM VS PPG](https://user-images.githubusercontent.com/63413238/89665042-f47ec500-d8cf-11ea-8e61-3ce045e481fe.png)
 
