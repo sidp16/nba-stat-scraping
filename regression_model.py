@@ -2,21 +2,24 @@ import numpy as np
 from matplotlib import pyplot as plt
 from nba_api.stats import endpoints
 from sklearn import linear_model
+from adjustText import adjust_text
 
-from constants import BLACK, LAST_NAME
+from constants import BLACK, LAST_NAME, FIRST_NAME
 from nba_player import NBAPlayer
+from random import choice
 
 
 # Creates a Linear Regression Model by taking in two variables
 class RegressionModel:
-    def __init__(self, var1, var2, annotations=1):
+    def __init__(self, var1, var2, leaderVariable, annotations=1):
         self.var1 = var1
         self.var2 = var2
+        self.leaderVariable = leaderVariable
         self.annotations = annotations
 
     @staticmethod
     def getData(self):
-        data = endpoints.leagueleaders.LeagueLeaders(stat_category_abbreviation=self.var1)
+        data = endpoints.leagueleaders.LeagueLeaders(stat_category_abbreviation=self.leaderVariable)
         leaders = data.league_leaders.get_data_frame()
 
         return leaders
@@ -40,27 +43,29 @@ class RegressionModel:
         plt.scatter(x, y, s=15, alpha=.5)
         plt.plot(x, predicted_y, color=BLACK)
 
-        return self.dotAnnotations(x, y)
+        return self.dotAnnotations(x, y, predicted_y)
 
-    def dotAnnotations(self, x, y):
+    def dotAnnotations(self, x, y, predicted_y):
         # Get data for player annotations
         leaders = self.getData(self)
-
+        
         # Places an annotation for the No.1 Player
-        for i in range(0, self.annotations):
-            player1 = NBAPlayer(leaders.PLAYER[i])
+        for i in range(0, len(self.annotations)):
+            player1 = NBAPlayer(leaders.PLAYER[self.annotations[i]-1])
             player1d = player1.details()
-            plt.annotate(player1d[LAST_NAME],
-                         (x[i], y[i]),
-                         (x[i], y[i]),
-                         arrowprops=dict(arrowstyle='-'))
+            texts = [plt.text(x[self.annotations[i]-1], y[self.annotations[i]-1], player1d[LAST_NAME])]
+            adjust_text(texts, arrowprops=dict(arrowstyle="-", color="red"))
+            # plt.annotate(texts,
+            #              (x[self.annotations[i]-1], y[self.annotations[i]-1]),
+            #              (x[self.annotations[i]-1], y[self.annotations[i]-1]),
+            #              arrowprops=dict(arrowstyle='-'))
 
         return self.labels()
 
     def labels(self):
         plt.title(f"Relationship Between {self.var1} and {self.var2}")
-        plt.xlabel(f"{self.var1} per Game")
-        plt.ylabel(f"{self.var2} Per Game")
+        plt.xlabel(f"{self.var1} per Game", fontsize="small")
+        plt.ylabel(f"{self.var2} Per Game", fontsize="small")
         
         # Saves image and names it accordingly, using the variables inputted
         plt.savefig(f"{self.var1} VS {self.var2}.png", dpi=300)
