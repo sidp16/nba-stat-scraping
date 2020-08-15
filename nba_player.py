@@ -113,7 +113,6 @@ class NBAPlayer:
             # Finds data for player and the team they play against
             playerDetails = self.details()
             opponentTeamDetails = self._opponentTeamDetails()
-            print("getting here")
-            return ShotChartDetail(player_id=playerDetails[ID], opponent_team_id=opponentTeamDetails[ID], context_measure_simple="FGA").get_data_frames()[0]
+            return ShotChartDetail(player_id=playerDetails[ID], team_id=0, opponent_team_id=opponentTeamDetails[ID], context_measure_simple="FGA").get_data_frames()[0]
         except:
             return NA
