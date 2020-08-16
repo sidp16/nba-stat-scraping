@@ -1,5 +1,5 @@
 # NBA Statistic Analysis
-Using the [nba_api](https://github.com/swar/nba_api "NBA API Repo") to delve into interesting statistics! Below are some of the Linear Regression Models I have created so far through playing around with the API and what it offers.
+Using the [nba_api](https://github.com/swar/nba_api "NBA API Repo") to delve into interesting statistics! Below are some of the Linear Regression Models and Shot Charts I have created so far through playing around with the API and what it offers.
 
 ## Problem Statement
 I have been watching and following the NBA for nearly 2 years and pride myself on being 'more than a fan' such that I want to gain a better understanding of the game to not only better my own basketball ability but to understand the numbers behind it. Channels such as [Thinking Basketball](https://www.youtube.com/channel/UC3HPbvB6f58X_7SMIp6OPYw "Thinking Basketball Youtube Channel"), [Heat Check](https://www.youtube.com/channel/UCmwxBk7Af9OnnloGZzp6JnQ "Heat Check Youtube Channel") and [BBALL BREAKDOWN](https://www.youtube.com/user/bballbreakdown "BBALL Breakdown Youtube Channel") offer in-depth analysis for several players, teams and coaching tactics. After watching these channels for the past few years I feel I have a good grasp on what stats mean and how to compare players and potentially teams. 
@@ -15,3 +15,7 @@ Each has their shortcomings - LeBron's lacklustre free throw and 3 point shootin
 ![3PTM VS PPG](https://user-images.githubusercontent.com/63413238/89665042-f47ec500-d8cf-11ea-8e61-3ce045e481fe.png)
 
 ![FGA VS PPG](https://user-images.githubusercontent.com/63413238/89665073-02cce100-d8d0-11ea-86a5-d2c48d29022c.png)
+
+![Stephen Curry in 2015-16](https://user-images.githubusercontent.com/63413238/90344150-c6575e80-e00e-11ea-8be5-6104c09fe02b.png)
+
+![Shaquille O'Neal in 1999-00](https://user-images.githubusercontent.com/63413238/90344157-d7a06b00-e00e-11ea-83ee-587f4a2d824e.png)
