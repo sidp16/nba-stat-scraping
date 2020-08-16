@@ -20,7 +20,7 @@ model1 = RegressionModel('PTS', 'AST', 'AST', [1, 2, 5, 8, 12])
 model1.draw()
 
 # Creating an NBA Player using class
-lebron = NBAPlayer(fullname='leBRON James', playerTeam="Los Angeles Lakers",
+lebron = NBAPlayer(fullname='LeBron James', playerTeam="Los Angeles Lakers",
                    opponentTeam="Golden State Warriors", season="2019")
 
 # Can get career / season wide box score logs
@@ -34,5 +34,5 @@ lbjShotsAgainstGSWWithLakers = ShotCharts.againstTeamShotChart(lebron)
 lbjShotsAgainstGSW = ShotCharts.careerAgainstTeamShotChart(lebron)
 
 # Career averages year by year
-lbjCareerStats = Statistics.careerStats(lebron)
-
+lbjCareerStats = Statistics.careerAverages(lebron) 
+lbjCareerTotals = Statistics.careerTotals(lebron)

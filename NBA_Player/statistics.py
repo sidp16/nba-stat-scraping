@@ -15,12 +15,22 @@ class Statistics(NBAPlayer):
 
         # Career year by year averages
 
-    def careerStats(self):
+    def careerAverages(self):
         try:
             # Finds data for player
             playerDetails = self.details()
 
             # Returns career year by year averages (per game) < can be changed
             return PlayerProfileV2(player_id=playerDetails[ID], per_mode36="PerGame").get_data_frames()[0]
+        except:
+            return NA
+    
+    def careerTotals(self):
+        try:
+            # Finds data for player
+            playerDetails = self.details()
+            
+            # Returns career year by year advanced stats 
+            return PlayerProfileV2(player_id=playerDetails[ID], per_mode36="Totals").get_data_frames()[0]
         except:
             return NA
