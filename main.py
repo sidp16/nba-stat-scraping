@@ -1,7 +1,11 @@
+# Several imports from different files
 from regression_model import RegressionModel
 from nba_api.stats.static import teams
-from nba_player import NBAPlayer
+from NBA_Player.nba_player import NBAPlayer
 from nba_api.stats import endpoints
+from NBA_Player.shot_charts import ShotCharts
+from NBA_Player.statistics import Statistics
+from NBA_Player.box_scores import BoxScores
 
 # To check what these sets of data offer offer (which variables I can use)
 teams_dict = teams.get_teams()
@@ -12,20 +16,23 @@ lakers = [team for team in teams_dict if team["full_name"] == "Los Angeles Laker
 
 # Linear regression model class can take in two viable variables and creates
 # a linear regression graph plotting them against each other
-model1 = RegressionModel('PTS', 'AST', 'AST', [1, 2, 5, 8, 12],)
+model1 = RegressionModel('PTS', 'AST', 'AST', [1, 2, 5, 8, 12])
 model1.draw()
 
-# Can now get shot chart of a player for their entire career
-lebron = NBAPlayer(fullname='LeBron James', playerTeam="Los Angeles Lakers",
-                   opponentTeam="Golden State Warriors")
+# Creating an NBA Player using class
+lebron = NBAPlayer(fullname='leBRON James', playerTeam="Los Angeles Lakers",
+                   opponentTeam="Golden State Warriors", season="2019")
 
-lbjShotsLakers = lebron.teamShotChart()
-lbjShotsAgainstGSWWithLakers = lebron.againstTeamShotChart()
-lbjCareerShots = lebron.careerShotChart()
-lbjShotsAgainstGSW = lebron.careerAgainstTeamShotChart()
+# Can get career / season wide box score logs
+lbjCareerBoxScores = BoxScores.careerLog(lebron)
+lbj2020BoxScores = BoxScores.seasonLog(lebron)
 
+# Can get different shot charts for a player (career or team wide)
+lbjCareerShots = ShotCharts.careerShotChart(lebron)
+lbjShotsLakers = ShotCharts.teamShotChart(lebron)
+lbjShotsAgainstGSWWithLakers = ShotCharts.againstTeamShotChart(lebron)
+lbjShotsAgainstGSW = ShotCharts.careerAgainstTeamShotChart(lebron)
 
-curry = NBAPlayer(fullname='Stephen Curry')
-curryShots = curry.careerShotChart()
-
+# Career averages year by year
+lbjCareerStats = Statistics.careerStats(lebron)
 

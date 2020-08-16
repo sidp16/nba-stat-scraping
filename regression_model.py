@@ -4,9 +4,8 @@ from nba_api.stats import endpoints
 from sklearn import linear_model
 from adjustText import adjust_text
 
-from constants import BLACK, LAST_NAME, FIRST_NAME
-from nba_player import NBAPlayer
-from random import choice
+from constants import BLACK, LAST_NAME
+from NBA_Player.nba_player import NBAPlayer
 
 
 # Creates a Linear Regression Model by taking in two variables
