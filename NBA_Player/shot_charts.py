@@ -63,3 +63,6 @@ class ShotCharts(NBAPlayer):
                                    context_measure_simple="FGA").get_data_frames()[0]
         except:
             return NA
+        
+    def yearBasedShotChart(self):
+        pass

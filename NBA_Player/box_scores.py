@@ -5,34 +5,44 @@ from constants import YEAR_NOT_IN_RANGE_ERROR_MESSAGE, ID, NA
 from NBA_Player.nba_player import NBAPlayer
 
 
-class BoxScores(NBAPlayer):
-    # Initialising class
-    def __init__(self, fullname, season=None):
-        super().__init__(fullname, season)
-        self.fullname = fullname
-        self.season = season
+class BoxScores(object):
+    
+    SEASON_MINIMUM = 1850
+    
+    @classmethod
+    def seasonLog(cls, player, season):
+        """
+        Parameters
+        ----------
+        cls : BoxScores
+        player : NBAPlayer
+            Player to return statistics for, in a given season.
 
-    # Seasonal box score numbers
-    def seasonLog(self):
+        Returns
+        -------
+        DataFrame
+            Season log for the player.
+
+        """
         try:
             # Checks whether inputted season is valid
-            if int(self.season) < 1850:
+            if int(season) < cls.SEASON_MINIMUM:
                 return YEAR_NOT_IN_RANGE_ERROR_MESSAGE
 
-            playerDetails = self.details()
+            playerDetails = player.details()
 
             findGames = playergamelog.PlayerGameLog(player_id=playerDetails[ID],
-                                                    season=self.season.strip())
+                                                    season=season.strip())
             gameLog = findGames.get_data_frames()[0]
 
             return gameLog
         except:
             return NA
-
-    # Box score numbers for entire career
-    def careerLog(self):
+    
+    @classmethod
+    def careerLog(cls, player):
         try:
-            playerDetails = self.details()
+            playerDetails = player.details()
 
             findGames = playergamelog.PlayerGameLog(player_id=playerDetails[ID],
                                                     season=SeasonAll.all)
@@ -41,3 +51,4 @@ class BoxScores(NBAPlayer):
             return careerLog
         except:
             return NA
+

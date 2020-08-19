@@ -6,12 +6,12 @@ from constants import FULL_NAME, NA
 
 class NBAPlayer(object):
     # Initialising class
-    def __init__(self, fullname, season=None, opponentTeam=None, playerTeam=None):
+    def __init__(self, fullname, opponentTeam=None, playerTeam=None):
         self.fullname = fullname
-        self.season = season
         self.playerTeam = playerTeam
         self.opponentTeam = opponentTeam
-
+    
+  
     # Details about player itself
     def details(self):
         try:
@@ -29,8 +29,7 @@ class NBAPlayer(object):
         try:
             teams_dict = teams.get_teams()
             team_details = [team for team in teams_dict if team[FULL_NAME].lower()
-                            == self.playerTeam.strip().lower()][
-                0]
+                            == self.playerTeam.strip().lower()][0]
 
             return team_details
         except:
