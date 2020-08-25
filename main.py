@@ -4,6 +4,7 @@ from nba_api.stats.static import teams
 from nba_api.stats.static import players
 from NBA_Player.nba_player import NBAPlayer
 from nba_api.stats.endpoints import teamyearbyyearstats
+from nba_api.stats.endpoints import teamgamelog
 from nba_api.stats import endpoints
 from NBA_Player.shot_charts import ShotCharts
 from NBA_Player.statistics import Statistics
@@ -17,6 +18,7 @@ leaders = data.league_leaders.get_data_frame()
 lakers = [team for team in teams_dict if team["full_name"] == "Los Angeles Lakers"][0]
 player_dict = players.get_players()
 lakersStats = teamyearbyyearstats.TeamYearByYearStats(team_id=lakers['id']).get_data_frames()[0]
+lakersRegularSznGameLog = teamgamelog.TeamGameLog(team_id=lakers['id'],season="2019-20", season_type_all_star="Regular Season").get_data_frames()[0]
 
 # Linear regression model class can take in two viable variables and creates
 # a linear regression graph plotting them against each other
@@ -30,7 +32,7 @@ lebron = NBAPlayer(fullname='LeBron James', playerTeam="Los Angeles Lakers",
 # Can get career / season wide box score logs
 lbjCareerBoxScores = BoxScores.careerLog(player=lebron)
 lbj2020BoxScores = BoxScores.seasonLog(player=lebron, season="2019")
-
+dd
 # Can get different shot charts for a player (career or team wide)
 lbjCareerShots = ShotCharts.careerShotChart(lebron)
 lbjShotsLakers = ShotCharts.teamShotChart(lebron)

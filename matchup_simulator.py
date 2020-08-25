@@ -1,79 +1,67 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Aug 18 18:13:20 2020
-
-@author: siddharthp
-"""
-
 import pandas as pd 
 import random as rnd
 import numpy as np 
+import re
 import matplotlib.pyplot as plt
-
-
-class Team:
-    """Team creates an object that can be passed into the simulation. Takes a Team Name (String)
-    points (list), and opp_points (List) """
-    
-    def __init__(self, TeamName,points, opp_points):
-        self.TeamName = TeamName
-        self.points = points
-        self.opp_points = opp_points
-    
-    #Returns avg of points
-    def pointsavg(self):
-        return np.mean(self.points)
-    
-    #Returns standard deviation of points
-    def pointsstd(self):
-        return np.std(self.points)
-    #returns avg of opponent points
-    def opp_pointsavg(self):
-        return np.mean(self.opp_points)
-    #returns standard deviation of opponent points 
-    def opp_pointsstd(self):
-        return np.std(self.opp_points)
-
-class MatchupSimulator:
-    """ Simulates single game outcomes as well as multiple outcomes"""
-    def __init__(self, Team1,Team2):
-        self.Team1 = Team1
-        self.Team2 = Team2
-        self.results = []
-    
-    #Simulates a single game returns 1 if team 1 wins, returns -1 if Team 2 wins, and returns 0 if the game is tied
-    def gameSim(self):
-        #Averages the random sample of a teams points with a random sample of the number of points the opponent allows
-        #Randomly samples from the two gaussian distributions to produce a probabilistic outcome
-        T1 = (rnd.gauss(self.Team1.pointsavg(),self.Team1.pointsstd())+ rnd.gauss(self.Team2.opp_pointsavg(),self.Team2.opp_pointsstd()))/2
-        T2 = (rnd.gauss(self.Team2.pointsavg(),self.Team2.pointsstd())+ rnd.gauss(self.Team1.opp_pointsavg(),self.Team1.opp_pointsstd()))/2
-        if int(round(T1)) > int(round(T2)):
-            return 1
-        elif int(round(T1)) < int(round(T2)):
-            return -1
-        else: return 0
+from nba_api.stats.endpoints import teamgamelog
+from nba_api.stats.static import teams
         
-    def gamesSim(self,number_simulations):
-        gamesout = []
-        team1win = 0
-        team2win = 0
-        tie = 0
-        for i in range(number_simulations):
-            #calls the pervious game simulator and aggregates results
-            gm = self.gameSim()
-            gamesout.append(gm)
-            if gm == 1:
-                team1win +=1 
-            elif gm == -1:
-                team2win +=1
-            else: tie +=1 
-        print(self.Team1.TeamName + ' Win ', team1win/(team1win+team2win+tie),'%')
-        print(self.Team2.TeamName + ' Win ', team2win/(team1win+team2win+tie),'%')
-        print('Tie ', tie/(team1win+team2win+tie), '%')
-        print('Number of Simulations: ',number_simulations)
-        #can see all results using self.results
-        self.results = gamesout
-        
-if __name__ == "__main__":
-    Team('Los Angeles Lakers', )
+# getting dictionary of all teams
+teams_dict = teams.get_teams()
+
+# getting the lakers 2020 game log
+lakers = [team for team in teams_dict if team["full_name"] == "Los Angeles Lakers"][0]
+lakersGameLog = teamgamelog.TeamGameLog(team_id=lakers['id'],season="2019-20", 
+                                        season_type_all_star="Regular Season").get_data_frames()[0]
+
+# getting the clippers 2020 game log
+clippers = lakers = [team for team in teams_dict if team["full_name"] == "Los Angeles Clippers"][0]
+clippersGameLog = teamgamelog.TeamGameLog(team_id=clippers['id'],season="2019-20", 
+                                        season_type_all_star="Regular Season").get_data_frames()[0]
+
+# extracting the data for points scored for each team
+lakers2020Points = [pts for pts in lakersGameLog['PTS']]
+totalLakersPoints = 0
+
+clippers2020Points = [pts for pts in clippersGameLog['PTS']]
+totalClippersPoints = 0
+
+# calculating total points scored in the season for the team
+for x in range(0, len(lakers2020Points)):
+    totalLakersPoints += lakers2020Points[x]
+    # print(f"Laker Cumulative Total: {totalLakersPoints}")
+    
+for i in range(0, len(clippers2020Points)):
+    totalClippersPoints += clippers2020Points[i]
+    # print(f"Clipper Cumulative Total: {totalClippersPoints}")
+
+# printing out an average for each team
+print(f"Clippers Average: {totalClippersPoints / len(clippers2020Points)}")
+print(f"Lakers Average: {totalLakersPoints / len(lakers2020Points)}")
+
+# displaying the points distribution in the form of a histogram
+lakersGameLog['PTS'].hist()
+clippersGameLog['PTS'].hist()
+
+# finding laker opponent teams
+lakersMatchups = lakersGameLog['MATCHUP']
+lakerHomeGames = []
+lakerAwayGames = []
+
+awayGamePattern = "[A-Z]+ @ [A-Z]"
+homeGamePattern = "[A-Z]+ vs. [A-Z]"
+
+for y in range(0, len(lakersMatchups)):
+    if re.search(homeGamePattern, lakersMatchups[y]):
+        print("home")
+    else:
+        print("       AWAY")
+
+
+# for y in range(0, len(lakers2020Points)):
+#     homeGame = re.sub("LAL vs.","", lakersMatchups[y]).strip().
+#     awayGame = re.sub("LAL @", "", lakersMatchups[y]).strip()
+#     lakerHomeGames.append(homeGame)
+#     lakerAwayGames.append(awayGame)
+    
+    
