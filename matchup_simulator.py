@@ -48,20 +48,16 @@ lakersMatchups = lakersGameLog['MATCHUP']
 lakerHomeGames = []
 lakerAwayGames = []
 
-awayGamePattern = "[A-Z]+ @ [A-Z]"
-homeGamePattern = "[A-Z]+ vs. [A-Z]"
+awayGamePattern = "[A-Z]+ @ +[A-Z]"
+homeGamePattern = "[A-Z]+ vs. +[A-Z]"
 
 for y in range(0, len(lakersMatchups)):
     if re.search(homeGamePattern, lakersMatchups[y]):
-        print("home")
+        print("HOME")
+        homeGame = re.sub("LAL vs.","", lakersMatchups[y]).strip()
+        lakerHomeGames.append(homeGame)
     else:
         print("       AWAY")
-
-
-# for y in range(0, len(lakers2020Points)):
-#     homeGame = re.sub("LAL vs.","", lakersMatchups[y]).strip().
-#     awayGame = re.sub("LAL @", "", lakersMatchups[y]).strip()
-#     lakerHomeGames.append(homeGame)
-#     lakerAwayGames.append(awayGame)
-    
-    
+        awayGame = re.sub("LAL @", "", lakersMatchups[y]).strip()
+        lakerAwayGames.append(awayGame) 
+        
